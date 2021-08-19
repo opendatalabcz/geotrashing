@@ -6,6 +6,7 @@
   * cesta k json souboru obsahující parametry html requestu
 
 ## Parametry skriptu
+```
 usage: export_qr_codes.py [-h] -u URL -f {jpg,svg}
                           [-i IGNORE_FIELDS [IGNORE_FIELDS ...]] -a ATTRIB -o
                           OUTPUT_DIR
@@ -21,7 +22,7 @@ optional arguments:
                         json file with attributes
   -o OUTPUT_DIR, --output_dir OUTPUT_DIR
                         output directory
-
+```
 # Place imgs to background
 * python skript sloužící pro vložení obrázků na pozadí
 * výstup jpg
@@ -30,6 +31,7 @@ optional arguments:
   * složka s obrázky(pro každý vygenerován na pozadí)
 
 ## Parametry skriptu
+```
 usage: place_img_to_template.py [-h] -i INPUT -b BACKGROUND [-iw IW] [-ih IH]
                                 [-x X] [-y Y] -o OUTPUT_DIR
 
@@ -47,3 +49,4 @@ optional arguments:
   -y Y, --yoffset Y     offset y coord
   -o OUTPUT_DIR, --output_dir OUTPUT_DIR
                         output directory
+```
