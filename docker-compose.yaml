@@ -13,6 +13,7 @@ services:
       HOST_PORT: ${HOST_PORT}
     ports:
       - 5000:5000
+
   db:
       image: postgres:13.3-alpine
       restart: always
@@ -25,8 +26,6 @@ services:
         POSTGRES_USER: ${POSTGRES_USER}
         POSTGRES_DB: ${POSTGRES_DB}
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      ports:
-        - "5432:5432"
 
   adminer:
       image: adminer
