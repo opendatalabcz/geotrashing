@@ -29,6 +29,7 @@ POST_URL = "{}/api/send".format(HOME_URL)
 
 @app.route('/', methods=['GET'])
 def index():
+    # Main page of geotrashing
     return render_template("index.html",
                            latlng_url=f"{HOME_URL}/api/latlng",
                            status_url=f"{HOME_URL}/api/status")
@@ -36,6 +37,7 @@ def index():
 
 @app.route('/full/<int:bin_id>', methods=['GET'])
 def full(bin_id: int):
+    # Full bin report given by its id
     bin_desc = db_conn.get_bin_desc(bin_id)
     if not bin_desc:
         return render_template("error_add.html",
@@ -52,6 +54,7 @@ def full(bin_id: int):
 
 @app.route('/change/<int:bin_id>', methods=['GET'])
 def change(bin_id: int):
+    # Various options to report
     return render_template('change.html',
                            bin_id=bin_id,
                            post_url=POST_URL)
@@ -59,6 +62,7 @@ def change(bin_id: int):
 
 @app.route('/hfull/<int:bin_id>', methods=['GET'])
 def hfull(bin_id):
+    # Half full bin report given by its id
     bin_desc = db_conn.get_bin_desc(bin_id)
     if not bin_desc:
         return render_template("error.html")
@@ -74,6 +78,9 @@ def hfull(bin_id):
 
 @app.route('/api/send', methods=['POST'])
 def api():
+    # API Entrypoint for storing reports
+    # expecting json containing bin id, percentage of fullness and basic information about device
+    # not to count the device twice
     assert request.is_json
     request_dict = request.get_json()
 
@@ -95,15 +102,17 @@ def api():
     return Response(status=200)
 
 
-# TODO: Check if it comes from index.html
 @app.route('/api/latlng', methods=['GET'])
 def latlng():
+    # Returns all bins with its GPS
     latlng = db_conn.get_bins_latlng()
     return jsonify(latlng)
 
 
 @app.route('/api/status', methods=['GET'])
 def status():
+    # Get status of bins located at given coordinates
+    # Expecting lat and lng as html arguments
     if 'lat' not in request.args.keys() or 'lon' not in request.args.keys():
         return Response(400)
 
@@ -114,6 +123,8 @@ def status():
 
 @app.route('/api/add', methods=['POST'])
 def add_bins():
+    # API entrypoint for storing new bin to DB
+    # each item of given json contains city, street, house number, postal code, bin id, lat, lng
     if not request.is_json:
         return jsonify({"error": "Not a Json"}), 400
 
@@ -152,12 +163,14 @@ def add_bins():
 
 @app.route('/qr', methods=['GET'])
 def qr_scanner():
+    # Web page with QR scanner
     return render_template('qr.html')
 
 
 @app.route('/add', methods=['GET'])
 @login_required
 def add_new_bin():
+    # Web page for registering new bin
     try:
         bin_id = int(request.args.get('bin_id'))
         bin_id = None if bin_id < 0 else bin_id
@@ -172,6 +185,7 @@ def add_new_bin():
 
 @app.route('/<path:path>')
 def error_path(path):
+    # Error web page
     return render_template('error.html')
 
 
