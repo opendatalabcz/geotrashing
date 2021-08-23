@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="cz">
+<head>
+     <title>GeoTrashing Pilot</title>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+     <link rel="stylesheet" href="/static/css/index.css">
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="static/js/glify.js"></script>
+</head>
+<body>
+     
+
+<!-- Navbar -->
+<div class="w3-top" >
+  <div class="w3-bar geo-background-color w3-card w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    <a href="#home" class="w3-bar-item w3-button w3-padding-large w3-hover-white">Home</a>
+    <a href="#map_container" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Mapa</a>
+    <a href="#about" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">O projektu</a>
+    <a href="#contact" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Kontakty</a>
+    <a href="/qr" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">QR Scanner</a>
+  </div>
+
+  <!-- Navbar on small screens -->
+  <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
+    <a href="#map_container" class="w3-bar-item w3-button w3-padding-large">Mapa</a>
+    <a href="#about" class="w3-bar-item w3-button w3-padding-large">O projektu</a>
+    <a href="#contact" class="w3-bar-item w3-button w3-padding-large">Kontakty</a>
+    <a href="/qr" class="w3-bar-item w3-button w3-padding-large">QR Scanner</a>
+    
+  </div>
+</div>
+
+<!-- Header -->
+<header id="home" class="w3-container geo-background-color w3-center" style="padding:128px 16px">
+  <h1 class="w3-margin w3-jumbo">GeoTrash PILOT</h1>
+  <a href="https://opendatalab.cz">
+    <button  class="w3-button w3-black w3-padding-large w3-large w3-margin-top">by OpendataLab</button>
+  </a>
+</header>
+
+<!-- First Grid -->
+<div class="w3-row-padding w3-padding-32 w3-container w3-dark-grey">
+  <div id="intro" class="w3-content">
+    <div class="w3-twothird">
+      <h1>Jdeš poctivě třídit, ale kontejner je plný? <br> 
+        <br>
+       NAHLAS TO!</h1>
+   <h2 class="w3-padding-32">Dej klukům popelářským vědět pomocí QR kódu BEZ APLIKACE, JEDNODUŠE, RYCHLE. </h2>
+    <h5>
+        Projekt GeoTrashing nabízí způsob, jak dát rychle a snadno vědět, které kontejnery jsou plné. Bez placení drahých senzorů, chytrých košů, nebo chodících kontrolorů.</h5>
+      <h5> 
+        S Vaší pomocí můžeme jednoduše a šetrně zefektivnit sběr odpadu.  
+      </h5>
+    </div>
+
+    <div class="w3-third w3-center">
+      <!-- TODO: CHANGE
+        <img class="sticker" src="static/images/opendatalab.png" alt="OpenDataLab sticker">
+      -->
+        <img class="sticker" src="static/images/opendatalab.png" alt="OpenDataLab sticker">
+    </div>
+  </div>
+</div>
+<!-- Second Grid -->
+
+<div id="map_container" class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+  <div class="w3-content w3-center">
+    <div id="map" ></div>
+    <script src="static/js/map.js" latlng_url= {{ latlng_url }} status_url = {{ status_url }} > </script>
+  </div>
+</div>
+<!-- Third Grid -->
+<div id="about" class="w3-row-padding w3-padding-64 w3-container">
+  <div class="w3-content">
+    <div class="w3-third w3-center">
+      <img class="logo w3-padding-32" src="static/images/logo.png" alt="OpenDataLab Logo">
+    </div>
+    <div class="w3-twothird">
+      <h1>O projektu</h1>
+      <h5 class="w3-padding-32">Aktuální stav odpadních nádob je jedna z klíčových informací pro optimalizaci sběru v ulicích měst. Tato data umožňují lépe určit potřebný počet nádob, vybírat vhodnější lokace pro jejich umístnění, optimalizovat cesty popelářských vozů a dynamicky reagovat na změny stavu odpadu v ulicích města. Kromě finančních úspor tak můžeme dosáhnout zlepšení čistoty životního prostředí, snížení emisí a hlavně kvalitnější služby pro občany.</h5>
+
+      <p class="w3-text-grey">
+  Informace o stavu popelnic a kontejnerů se aktuálně řeší primárně pomocí pozorovatelů. V poslední době se testují i možnosti „chytrých senzorů“, které jsou ale poměrně drahé, vyžadují napájení, připojení na mobilní síť a nelze je snadno umístit do všech typů nádob.
+  Cílem projektu "geoTrashing pilot" je prozkoumat možnost monitorování stavu kontejnerů na tříděný odpad za pomoci komunity obyvatel Prahy. Stav zaplnění může ohlásit každý majitel chytrého telefonu, stačí pouze naskenovat QR kód umístěný na kontejneru.<br> 
+  <br>
+   Nevyžaduje se žádná další mobilní aplikace a celý proces ohlášení koše nezabere víc než pár sekund. Kromě zaplnění košů mohou uživatelé zadávat i stížnosti na nesprávné umístnění košů, či jejich poškození.<br>
+  <br>
+
+  Ve srovnání s monitorováním kontejnerů pomocí senzorů je navrhovaná metoda finančně dostupnější a variabilnější. Nabízí také možnost pokrytí různých typů košů a nevyžaduje elektrické napájení. Projekt tak umožní rozšířit stávající základnu monitorovaných košů bez nutnosti větších projektů či technických zásahů do stávajícího vybavení. <br> 
+  <br> 
+  V rámci pilotní fáze se projekt soustředí na technické řešení problému a na zhodnocení potenciálu použitých metod pro malé množství odpadních nádob (30-100). Kromě aplikací pro sběr hlášení stavu bude nabídnuta i vizualizace a analýza získaných dat.<br>
+  <br>
+  Projekt bude financován v rámci projektu Open Data Lab. Povolení k polepu a provozu udělily <a href="https://www.psas.cz/">Pražské služby a.s.</a></p>
+    </div>
+  </div>
+</div>
+
+<div id="contact" class="w3-container w3-black w3-center w3-opacity w3-padding-64">
+  <div class="w3-content"> 
+      <div class="w3-twothird">
+      <h1>Kontakty</h1>
+      <div>
+      International Business Center <br>
+      Pobřežní 620/3, Praha 8
+      </div>
+      <h4><a href="mailto:info@opendatalab.cz">info@opendatalab.cz</a></h4>
+      <div class="w3-xlarge">
+        <i class=></i>
+        <a href="https://cs-cz.facebook.com/Profinit.EU"><i class="fa fa-facebook-official w3-hover-opacity"></i></a>
+        <a href="https://www.instagram.com/"><i  class="fa fa-instagram w3-hover-opacity"></i></a>
+        <a href="https://twitter.com/opendatalabCZ"><i class="fa fa-twitter w3-hover-opacity"></i></a>
+        <a href="https://www.linkedin.com/company/profinit"><i class="fa fa-linkedin w3-hover-opacity"></i></a>
+      </div>
+    </div> 
+    <div id="contact-map" class="w3-third">
+      <iframe src="https://api.mapy.cz/frame?params=%7B%22x%22%3A14.440183639526367%2C%22y%22%3A50.0911687498991%2C%22base%22%3A%221%22%2C%22layers%22%3A%5B%5D%2C%22zoom%22%3A14%2C%22url%22%3A%22https%3A%2F%2Fen.mapy.cz%2Fs%2Fhutajenepo%22%2C%22mark%22%3A%7B%22x%22%3A%2214.441299438476562%22%2C%22y%22%3A%2250.0931510925293%22%2C%22title%22%3A%22IBC%20-%20St%C5%99edisko%20mezin%C3%A1rodn%C3%ADho%20obchodu%22%7D%2C%22overview%22%3Afalse%7D&amp;width=400&amp;height=280&amp;lang=en" width="400" height="280" style="border:none" frameBorder="0"></iframe>
+    </div>
+    </div>
+</div>
+<!-- Footer -->
+<footer class="w3-container w3-center w3-opacity">  
+ <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+<script>
+// Used to toggle the menu on small screens when clicking on the menu button
+function myFunction() {
+  var x = document.getElementById("navDemo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+gunicorn
+python-dotenv
+pandas
+flask
+psycopg2-binary
+flask_simplelogin
+pandas
+Flask-SSLify
+seaborn

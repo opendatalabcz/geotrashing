@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>GeoTrashing ADD</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+<body>
+    <div class="w3-padding w3-display-topmiddle w3-margin-top" style="width:85%">
+        <div class="w3-container w3-pale-green w3-center">
+            <p class="w3-xxlarge">Přidej KOŠ</p>
+        </div>
+        <div class="w3-container">
+
+            <form>
+                <div class="form-group">
+                    <label>Lattitude</label>
+                    <input id="lat" type="text" name="lat" class="form-control" value="" required="">
+                </div>
+                <div class="form-group">
+                    <label>Longitude</label>
+                    <input id="lng" type="text" name="lng" class="form-control" value="" required="">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" name="desc" class="form-control" value="kontejner na sklo" required="">
+                </div>
+                <div class="form-group">
+                    <label>QR id:</label>
+                    <input type="number" name="start_id" class="form-control" value="{{bin_id}}" required="">
+                </div>
+                <h3>Address</h3>
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" id="city" name="city" class="form-control" value="" required="">
+                </div>
+                <div class="form-group">
+                    <label>Street</label>
+                    <input type="text" id="street" name="street" class="form-control" value="" required="">
+                </div>
+                <div class="form-group">
+                    <label>House Number</label>
+                    <input type="number" id="house_num" name="house_num" class="form-control" value="" required="">
+                </div>
+                <div class="form-group">
+                    <label>State</label>
+                    <input type="text" id="state" name="state" class="form-control" value="" required="">
+                </div>
+                <div class="form-group">
+                    <label>Postal</label>
+                    <input type="number" id="postal" name="postal" class="form-control" value="" required="">
+                </div>
+                <button type="button" class="btn btn-locate">Locate ME</button>
+                <button type="button" class="btn btn-address">GPS to Address</button>
+                <button type="submit" class="btn btn-success save-btn">ADD</button>
+            </form>
+            <br />
+            <table class="table table-bordered data-table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Lat</th>
+                        <th>Lng</th>
+                        <th>Desc</th>
+                        <th>City</th>
+                        <th>Street</th>
+                        <th>House_num</th>
+                        <th>State</th>
+                        <th>Postal</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="w3-container w3-center">
+                <button type="button" style="background-color: greenyellow;" class="btn btn-send">SEND TO
+                    SERVER</button>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        $("form").submit(function (e) {
+            e.preventDefault();
+            var actual_id = $("input[name='start_id']").val();
+            var lat = $("input[name='lat']").val();
+            var lng = $("input[name='lng']").val();
+            var desc = $("input[name='desc']").val();
+            var city = $("input[name='city']").val();
+            var street = $("input[name='street']").val();
+            var house_num = $("input[name='house_num']").val();
+            var state = $("input[name='state']").val();
+            var postal = $("input[name='postal']").val();
+
+            if (actual_id < 0) {
+                console.log(`Wrong id ${actual_id}`)
+                return
+            }
+            // fixing string addition 
+            actual_id = parseInt(actual_id)
+            var row_html = `<tr data-id='${actual_id}' data-lat='${lat}' data-lng='${lng}' data-desc='${desc}' data-city='${city}' data-street='${street}' data-state='${state}' data-postat='${postal}'>`
+                    + `<td> ${actual_id} </td>`
+                    + `<td> ${lat} </td>`
+                    + `<td> ${lng} </td>`
+                    + `<td> ${desc} </td>`
+                    + `<td> ${city} </td>`
+                    + `<td> ${street} </td>`
+                    + `<td> ${house_num} </td>`
+                    + `<td> ${state} </td>`
+                    + `<td> ${postal} </td>`
+                    + "<td><button class='btn btn-danger btn-xs btn-delete'>Delete</button></td></tr>"
+                $(".data-table tbody").append(row_html);
+            // Null inputs
+            //$("input[name='name']").val('');
+            //$("input[name='email']").val('');
+        });
+        $("body").on("click", ".btn-delete", function () {
+            $(this).parents("tr").remove();
+        });
+
+        $("body").on("click", ".btn-send", function () {
+            var heads = [];
+            $("thead").find("th").each(function () {
+                heads.push($(this).text().trim());
+            });
+            var rows = [];
+            $("tbody tr").each(function () {
+                cur = {};
+                $(this).find("td").each(function (i, v) {
+                    if (heads[i] != "Action") {
+                        cur[heads[i]] = $(this).text().trim();
+                    }
+                });
+                rows.push(cur);
+                cur = {};
+            });
+            jQuery.post({
+                url: "{{ send_url }}", data: JSON.stringify(rows), contentType: 'application/json', dataType: "json", error: function (response) {
+                    alert(`Error ${response.responseJSON.error}`)
+                    console.log(response)
+                },
+                success: function (response) {
+                    if (response['non-inserted']){
+                        alert(`Některé koše nebyly přidány ${response['non-inserted']}`)
+                    } else {
+                        alert("Všechny koše přidány")
+                    }
+                }
+            });
+        })
+        $("form").on("click", ".btn-locate", function () {
+            getLocation()
+        })
+
+        $("form").on("click", ".btn-address", function () {
+            showAddress()
+        })
+    </script>
+    <script>
+       function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition)
+            } else {
+                console.log("Geolocation is not supported by this browser.")
+            }
+        }
+        async function showPosition(position) {
+            var lat = document.getElementById("lat");
+            var lng = document.getElementById("lng")
+            lat.value = position.coords.latitude
+            lng.value = position.coords.longitude
+            showAddress()
+        }
+        async function showAddress() {
+            var lat = document.getElementById("lat").value
+            var lng = document.getElementById("lng").value
+
+            var openstreetmap_reverse = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18`
+            jQuery.get(openstreetmap_reverse, function (data, status) {
+                if (status != "success") {
+                    console.log(`Error ${status} ${data}`)
+                }
+                else {
+                    var city = document.getElementById("city");
+                    var street = document.getElementById("street")
+                    var state = document.getElementById("state")
+                    var postal = document.getElementById("postal")
+                    var house_num = document.getElementById("house_num")
+                    var address = data.address
+                    if (address.city) {
+                        city.value = address.city
+                    }
+                    else if (address.town) {
+                        city.value = address.town
+                    }
+                    else {
+                        city.value = address.village
+                    }
+                    street.value = address.road
+                    // Remove whitespaces from postal
+                    postal.value = address.postcode.replace(/\s/g, '')
+                    state.value = address.country
+                    if (house_num.value) {
+                        house_num.value = address.house_number.split("/")[0]
+                    }
+                }
+            });
+
+        }
+        getLocation()
+    </script>
+</body>
+
+</html>

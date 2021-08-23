@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>GeoTrashing Pilot</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,height=device-height, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
+    <script src="/static/js/jsQr.js"></script>
+    <style>
+        .geo-background-color {
+            background-color: #99b253ff !important;
+            font-family: "Lato", sans-serif;
+        }
+
+        video {
+            background: #222;
+            width: 95%;
+        }
+
+        canvas {
+            background: purple;
+            width: 95%;
+        }
+    </style>
+</head>
+
+<body class="geo-background-color">
+    <div class="w3-container">
+        <div class="w3-padding w3-display-topmiddle w3-margin-top" style="width:100%; height: 100%;">
+            <div class="w3-container  w3-section w3-center">
+                <div id="loadingMessage">🎥 Unable to access video stream (please make sure you have a webcam enabled)
+                </div>
+                <canvas id="canvas" hidden></canvas>
+                <div id="output" hidden>
+                    <div id="outputMessage">No QR code detected.</div>
+                    <div hidden><b>Data:</b> <span id="outputData"></span></div>
+                </div>
+                <script>
+                    var video = document.createElement("video");
+                    var canvasElement = document.getElementById("canvas");
+                    var canvas = canvasElement.getContext("2d");
+                    var loadingMessage = document.getElementById("loadingMessage");
+                    var outputContainer = document.getElementById("output");
+                    var outputMessage = document.getElementById("outputMessage");
+                    var outputData = document.getElementById("outputData");
+                    var lastTick = new Date();
+                    var redirecting = false;
+
+                    function drawLine(begin, end, color) {
+                        canvas.beginPath();
+                        canvas.moveTo(begin.x, begin.y);
+                        canvas.lineTo(end.x, end.y);
+                        canvas.lineWidth = 4;
+                        canvas.strokeStyle = color;
+                        canvas.stroke();
+                    }
+
+                    // Use facingMode: environment to attemt to get the front camera on phones
+                    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function (stream) {
+                        video.srcObject = stream;
+                        video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+                        video.play();
+                        requestAnimationFrame(tick);
+                    });
+
+                    function tick() {
+                        var now = new Date()
+                        if ((now - lastTick > 60) && !redirecting) {
+                            //console.log(now - lastTick);
+                            lastTick = new Date();
+                            loadingMessage.innerText = "⌛ Loading video..."
+                            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                                loadingMessage.hidden = true;
+                                canvasElement.hidden = false;
+                                outputContainer.hidden = false;
+
+                                canvasElement.height = video.videoHeight;
+                                canvasElement.width = video.videoWidth;
+                                canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+                                var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                                var code = jsQR(imageData.data, imageData.width, imageData.height, {
+                                    inversionAttempts: "dontInvert",
+                                });
+                                if (code) {
+                                    drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
+                                    drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
+                                    drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
+                                    drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+                                    outputMessage.hidden = true;
+                                    outputData.parentElement.hidden = false;
+                                    outputData.innerText = code.data;
+                                    if (code.data.startsWith("http")){
+                                        redirecting = true;
+                                        window.location.replace(code.data)
+                                    }
+                                } else {
+                                    outputMessage.hidden = false;
+                                    outputData.parentElement.hidden = true;
+                                }
+                            }
+                        }
+                        requestAnimationFrame(tick);
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

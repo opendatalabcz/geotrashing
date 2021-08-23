@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GeoTrashing MILK</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.1.0/fingerprint2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ua-parser-js@0/dist/ua-parser.min.js"></script>
+</head>
+<body>
+<div class="w3-container">
+    <div class="w3-padding w3-display-topmiddle w3-margin-top" style="width:85%">
+        <div class="w3-container  w3-section"></div>
+        <div class="w3-container w3-pale-yellow w3-center">
+            <p class="w3-xxlarge">{{ msg_prefix }} {{ bin_desc }}  {{ msg_suffix }}</p>
+        </div>
+
+        <div class="w3-container  w3-section"></div>
+        <p>
+            <button class="w3-btn w3-xlarge w3-border w3-round-large" style="width:100%"
+                    onclick="window.location.href = '/full/{{ bin_id }}';">
+                Zpět
+            </button>
+        </p>
+
+        <div class="w3-container  w3-section"></div>
+        <div class="w3-container w3-pale-green w3-center">
+            <p class="w3-medium"><b>Děkujeme za spolupráci.</b></p>
+        </div>
+        <div class="w3-container w3-pale-green w3-center">
+                <!-- Fingerprint <p id="output" class="w3-small"><b></b></p> -->
+        </div>
+    </div>
+</div>
+<!--FingerprintScript-->
+<script src="/static/js/makePostFingerprint.js" bin_id={{ bin_id }} post_url= {{ post_url }} fill_perc={{ fill_perc}}></script>
+<!-- Cookies bar-->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/cookie-bar/cookiebar-latest.min.js?theme=altblack&always=1&noGeoIp=1"></script>
+</body>
+</html>
